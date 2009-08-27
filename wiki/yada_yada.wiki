@@ -1,0 +1,2 @@
+Quick info: there are only 3 strings (tracks), while FOF has 5. 2 rightmost strings are merged into first 3 on song loading, so number of events are the same.
+There are only 3 buttons, A, B, C. In fact you can press between buttons A-B and B-C to press them both. A-B-C and A-C combinations are activated using single button B.
