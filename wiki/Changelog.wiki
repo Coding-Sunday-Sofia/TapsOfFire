@@ -1,7 +1,6 @@
+*TOF 1.0.3*, 05/09/2009
+  * Corrected midi parsing
+  * Corrected BPM change handling (now bpm changes immediately)
 
-*1.0.3, 05/09/2009*
-  * Fixed midi parsing
-  * Fixed BPM change handling
-
-*1.0.2, 03/09/2009*
+*TOF 1.0.2*, 03/09/2009
   * First public version
