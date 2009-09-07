@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<color name="background">#FF330000</color>
+	<color name="background_transparent">#E0330000</color>
+	<color name="base">#FFFFFF80</color>
+	
+	<color name="disabled_text">#FF280000</color>
+	<color name="shadow">#FF101010</color>
+	<color name="button_text">#FFFFA400</color>
+	<color name="button_text_pressed">#FFDF5400</color>
+	
+	<color name="selected">#FFFFBF00</color>
+	<color name="string0">#FF22FF22</color>
+	<color name="string1">#FFFF2222</color>
+	<color name="string2">#FFFFFF22</color>
+	
+	<!-- ============================================================================= -->
+	
+	<dimen name="view_padding">10px</dimen>
+	<dimen name="divider_padding">5px</dimen>
+	<dimen name="margin">25px</dimen>
+	<dimen name="text_even_smaller">8px</dimen>
+	<dimen name="text_small">12px</dimen>
+	<dimen name="text_medium">16px</dimen>
+	<dimen name="text_normal">18px</dimen>
+	<dimen name="text_large">22px</dimen>
+	<dimen name="text_even_larger">25px</dimen>
+	
+	<!-- ============================================================================= -->
+	
+	<integer name="anim_alpha_duration">400</integer>
+	<integer name="anim_body_delay">100</integer>
+	<integer name="anim_body_delay_decay">10</integer>
+	<integer name="anim_body_duration">300</integer>
+	
+	<integer name="anim_button_delay">100</integer>
+	<integer name="anim_button_duration">100</integer>
+	
+	<integer name="anim_game_menu_duration">400</integer>
+	
+	<integer name="anim_logo_in_duration">300</integer>
+	
+	<integer name="anim_loading_out_duration">500</integer>
+
+	<!-- ============================================================================= -->
+	
+	<style name="MainLayout">
+		<item name="android:padding">@dimen/view_padding</item>
+	</style>
+	
+	<style name="LayoutFlipper">
+		<item name="android:paddingTop">@dimen/view_padding</item>
+		<item name="android:paddingLeft">@dimen/view_padding</item>
+		<item name="android:paddingBottom">@dimen/view_padding</item>
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">fill_parent</item>		
+    	<item name="android:inAnimation">@anim/push_left_in</item>
+		<item name="android:outAnimation">@anim/push_left_out</item>
+	</style>
+	
+	<style name="FlippingPage">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">fill_parent</item>		
+		<item name="android:paddingRight">@dimen/view_padding</item>
+	</style>
+	
+	<style name="HeadText">
+		<item name="android:textColor">@color/base</item>
+		<item name="android:textSize">@dimen/text_large</item>
+		<item name="android:layout_marginBottom">@dimen/margin</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>		
+	</style>
+
+	<style name="LargeText">
+		<item name="android:textColor">@color/base</item>
+		<item name="android:textSize">@dimen/text_large</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>		
+	</style>
+
+	<style name="ParagraphText">
+		<item name="android:textColor">@color/base</item>
+		<item name="android:textSize">@dimen/text_normal</item>
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>		
+	</style>	
+	
+	<style name="SmallText">
+		<item name="android:textColor">@color/base</item>
+		<item name="android:textSize">@dimen/text_small</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>		
+	</style>
+
+	<style name="NormalText">
+		<item name="android:textColor">@color/base</item>
+		<item name="android:textSize">@dimen/text_normal</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>		
+	</style>
+	
+	<style name="ListHeader">
+		<item name="android:textColor">@color/background</item>
+		<item name="android:paddingLeft">5px</item>
+		<item name="android:textSize">@dimen/text_small</item>
+		<item name="android:background">@color/selected</item>
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>		
+	</style>
+	
+	<!-- ============================================================================= -->
+
+	<style name="TextButton">
+		<item name="android:textSize">@dimen/text_large</item>
+		<item name="android:textColor">@color/text_button</item>
+		<item name="android:background">@null</item>
+		<item name="android:focusable">false</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
+	
+	<style name="HelpButton" parent="TextButton">
+		<item name="android:layout_marginTop">@dimen/view_padding</item>
+		<item name="android:layout_marginBottom">@dimen/view_padding</item>
+	</style>
+	
+	<style name="FireButton">
+		<item name="android:textSize">30px</item>
+		<item name="android:textColor">@color/text_button</item>
+		<item name="android:focusable">false</item>
+		<item name="android:background">@null</item>
+		<item name="android:padding">5px</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
+	
+	<!-- ============================================================================= -->
+	
+	<style name="SettingLabelBase">
+		<item name="android:textSize">16px</item>
+		<item name="android:textColor">@color/base</item>
+	</style>
+	
+	<style name="SettingLabel" parent="SettingLabelBase">
+		<item name="android:textSize">16px</item>
+		<item name="android:textColor">@color/base</item>
+		<item name="android:singleLine">true</item>
+		<item name="android:ellipsize">end</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>		
+	</style>
+
+	<style name="SettingLabelMultiline" parent="SettingLabelBase">
+	</style>
+	
+	<style name="SettingLineLayout">
+		<item name="android:orientation">horizontal</item>
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:gravity">center_vertical</item>
+	</style>
+	
+	<style name="SettingLineLabel" parent="SettingLabelBase">
+		<item name="android:layout_width">0px</item>
+		<item name="android:layout_weight">1</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
+	
+	<style name="SettingLineEditBase">
+		<item name="android:focusable">true</item>
+		<item name="android:focusableInTouchMode">true</item>
+		<item name="android:clickable">true</item>
+		<item name="android:background">@null</item>
+		<item name="android:textColor">@color/text_button</item>
+		<item name="android:gravity">center_vertical|right</item>
+		<item name="android:minEms">3</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
+	
+	<style name="SettingLineDecimalEdit" parent="SettingLineEditBase">
+		<item name="android:numeric">decimal</item>
+	</style>
+	
+	<style name="SettingLineIntegerEdit" parent="SettingLineEditBase">
+		<item name="android:numeric">integer</item>
+	</style>
+	
+	<style name="SettingLineCheckbox">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>		
+	</style>
+	
+	<style name="SettingsLayout">
+		<item name="android:paddingTop">@dimen/view_padding</item>
+		<item name="android:paddingLeft">@dimen/view_padding</item>
+		<item name="android:paddingRight">20px</item>
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">fill_parent</item>
+		<item name="android:orientation">vertical</item>
+	</style>
+	
+	<!-- ============================================================================= -->
+	
+	<style name="ScrollView">
+		<item name="android:cacheColorHint">@color/background</item>
+		<item name="android:scrollbarThumbVertical">@drawable/scrollbar_handle_vertical</item>
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">fill_parent</item>
+	</style>
+
+	<style name="ListView" parent="@android:style/Widget.ListView">
+		<item name="android:focusable">false</item>
+		<item name="android:focusableInTouchMode">false</item>
+		<item name="android:cacheColorHint">@color/background</item>
+		<item name="android:divider">@drawable/divider_horizontal</item>
+		<item name="android:scrollbarThumbVertical">@drawable/scrollbar_handle_vertical</item>
+	</style>
+
+	<style name="VolumeSeekBar">
+		<item name="android:layout_width">200px</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:max">20</item>
+	</style>
+	
+	<style name="RatingBarSmall">
+		<item name="android:indeterminateOnly">false</item>
+		<item name="android:progressDrawable">@drawable/ratingbar_small</item>
+		<item name="android:indeterminateDrawable">@drawable/ratingbar_small</item>
+		<item name="android:minHeight">20px</item>
+		<item name="android:maxHeight">20px</item>
+		<item name="android:thumb">@null</item>
+		<item name="android:isIndicator">true</item>
+	</style>
+
+	<style name="RatingBarLarge">
+		<item name="android:indeterminateOnly">false</item>
+		<item name="android:progressDrawable">@drawable/ratingbar_large</item>
+		<item name="android:indeterminateDrawable">@drawable/ratingbar_large</item>
+		<item name="android:minHeight">50px</item>
+		<item name="android:maxHeight">50px</item>
+		<item name="android:thumb">@null</item>
+		<item name="android:isIndicator">true</item>
+	</style>
+	
+	<!-- ============================================================================= -->
+
+	<style name="Theme" parent="@android:style/Theme.NoTitleBar.Fullscreen">
+		<item name="android:windowBackground">@color/background</item>
+	</style>
+	
+	<declare-styleable name="FTextView">
+		<attr name="fireTypeface" format="boolean"/>
+	</declare-styleable>
+
+	<!-- ============================================================================= -->
+
+</resources>

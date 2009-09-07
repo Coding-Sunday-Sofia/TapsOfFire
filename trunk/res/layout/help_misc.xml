@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	style="@style/ScrollView">
+<LinearLayout 
+	android:orientation="vertical"
+	style="@style/FlippingPage">
+	
+	<org.tof.ui.FTextView
+		style="@style/HeadText"
+		android:text="Random facts"/>
+	
+	<TextView
+		style="@style/ParagraphText"
+		android:text="@string/misc_1"/>
+	<include layout="@layout/divider_horizontal"/>
+
+	<TextView
+		style="@style/ParagraphText"
+		android:text="@string/misc_2"/>
+	<include layout="@layout/divider_horizontal"/>
+
+	<TextView
+		style="@style/ParagraphText"
+		android:text="@string/misc_3"/>
+	<include layout="@layout/divider_horizontal"/>
+
+	<TextView
+		style="@style/ParagraphText"
+		android:text="@string/misc_4"/>
+	
+</LinearLayout>
+</ScrollView>

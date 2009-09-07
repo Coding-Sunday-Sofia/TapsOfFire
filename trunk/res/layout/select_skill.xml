@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ViewFlipper
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/flipper"
+	style="@style/LayoutFlipper"
+	android:background="@drawable/select_skill_background">
+	
+	<LinearLayout
+		style="@style/FlippingPage"
+	    android:orientation="vertical">
+	    
+	    <LinearLayout android:id="@+id/head"
+		    android:orientation="vertical"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content">
+		    
+		    <org.tof.ui.FTextView android:id="@+id/name"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+				android:singleLine="true"
+				android:ellipsize="marquee"
+				android:marqueeRepeatLimit="marquee_forever"
+        		android:textColor="@color/selected"
+				android:textSize="@dimen/text_large"/>
+		
+		    <org.tof.ui.FTextView android:id="@+id/artist"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+				android:singleLine="true"
+			    android:ellipsize="end"
+				android:textColor="@color/base"
+				android:textSize="@dimen/text_normal"/>
+		    
+		</LinearLayout>
+		
+		<View 
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="30px"/>
+
+	    <include android:id="@+id/supaeasyDivider"
+	    	layout="@layout/divider_horizontal"/>
+		<include android:id="@+id/supaeasy"
+			layout="@layout/playable_skill"/>
+
+	    <include android:id="@+id/easyDivider"
+	    	layout="@layout/divider_horizontal"/>
+		<include android:id="@+id/easy"
+			layout="@layout/playable_skill"/>
+		
+	    <include android:id="@+id/mediumDivider"
+	    	layout="@layout/divider_horizontal"/>
+		<include android:id="@+id/medium"
+			layout="@layout/playable_skill"/>
+		
+	    <include android:id="@+id/amazingDivider"
+	    	layout="@layout/divider_horizontal"/>
+		<include android:id="@+id/amazing"
+			layout="@layout/playable_skill"/>
+		
+	    <include android:id="@+id/lastDivider"
+	    	layout="@layout/divider_horizontal"/>
+		
+	</LinearLayout>
+	
+	<ViewStub
+		android:layout="@layout/select_skill_no_sdcard"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:visibility="invisible"/>
+		
+	<ViewStub
+		android:layout="@layout/select_skill_extractor"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:visibility="invisible"/>
+
+	<ViewStub
+		android:layout="@layout/select_skill_converter"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:visibility="invisible"/>
+
+</ViewFlipper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ViewFlipper
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	style="@style/LayoutFlipper"
+	android:id="@+id/flipper"
+	android:background="@drawable/main_menu_background">
+    
+	<LinearLayout
+		android:id="@+id/layout"
+		style="@style/FlippingPage"
+	    android:orientation="vertical">
+	    
+	    <RelativeLayout
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="0dip"
+	    	android:layout_weight="1">
+	    	
+	    	<ImageView android:id="@+id/logo"
+	    		android:layout_width="wrap_content"
+	    		android:layout_height="wrap_content"
+	    		android:layout_centerInParent="true"
+	    		android:src="@drawable/logo"/>
+	    	
+	    </RelativeLayout>
+	    
+	    <LinearLayout
+	    	android:orientation="vertical"
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="0dip"
+	    	android:layout_weight="1"
+	    	android:gravity="center">
+	    	
+		    <org.tof.ui.FireButton android:id="@+id/play"
+				style="@style/FireButton"
+		    	android:layout_width="fill_parent"
+		    	android:layout_height="wrap_content"
+		    	android:text="Play"/>
+	
+		    <org.tof.ui.FireButton android:id="@+id/settings"
+		    	style="@style/FireButton"
+		    	android:layout_width="fill_parent"
+		    	android:layout_height="wrap_content"
+		    	android:text="Settings"/>
+	
+		    <org.tof.ui.FireButton android:id="@+id/help"
+		    	style="@style/FireButton"
+		    	android:layout_width="fill_parent"
+		    	android:layout_height="wrap_content"
+		    	android:text="Help"/>
+	    	
+	    </LinearLayout>
+
+	    <org.tof.ui.FireButton android:id="@+id/adc"
+			style="@style/FireButton"
+			android:textSize="@dimen/text_even_smaller"
+	    	android:layout_gravity="bottom|right"
+	    	android:text="ADC note"/>
+	    
+	</LinearLayout>
+	
+	<ViewStub
+		android:id="@+id/page_welcome"
+		android:inflatedId="@+id/page_welcome"
+		android:layout="@layout/main_menu_welcome"
+		android:visibility="invisible"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"/>
+
+	<ViewStub
+		android:layout="@layout/main_menu_adc"
+		android:visibility="invisible"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"/>
+	
+</ViewFlipper>

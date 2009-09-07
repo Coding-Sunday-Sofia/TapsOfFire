@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ViewFlipper
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/flipper"
+	style="@style/LayoutFlipper"
+	android:background="@drawable/settings_background">
+    
+	<ScrollView style="@style/ScrollView">
+	<LinearLayout android:id="@+id/layout"
+		style="@style/FlippingPage"
+		android:orientation="vertical">
+		
+		<org.tof.ui.FTextView android:id="@+id/head"
+			style="@style/HeadText"
+			android:text="Settings"/>
+			
+		<include android:id="@+id/menuVolumeDivider" 
+			layout="@layout/divider_horizontal"/>
+		<org.tof.ui.FTextView android:id="@+id/menuVolumeLabel"
+			style="@style/SettingLabel"
+			android:text="@string/menu_volume_fmt"/>
+		<SeekBar android:id="@+id/menuVolume"
+			style="@style/VolumeSeekBar"
+			android:layout_gravity="right"/>
+			
+		<include android:id="@+id/songVolumeDivider" 
+			layout="@layout/divider_horizontal"/>
+		<org.tof.ui.FTextView android:id="@+id/songVolumeLabel"
+			style="@style/SettingLabel"
+			android:text="@string/song_volume_fmt"/>
+		<SeekBar android:id="@+id/songVolume"
+			style="@style/VolumeSeekBar"
+			android:layout_gravity="right"/>
+	
+		<include android:id="@+id/guitarVolumeDivider" 
+			layout="@layout/divider_horizontal"/>
+		<org.tof.ui.FTextView android:id="@+id/guitarVolumeLabel"
+			style="@style/SettingLabel"
+			android:text="@string/guitar_volume_fmt"/>
+		<SeekBar android:id="@+id/guitarVolume"
+			style="@style/VolumeSeekBar"
+			android:layout_gravity="right"/>
+
+		<include android:id="@+id/screwupVolumeDivider" 
+			layout="@layout/divider_horizontal"/>
+		<org.tof.ui.FTextView android:id="@+id/screwupVolumeLabel"
+			style="@style/SettingLabel"
+			android:text="@string/screwup_volume_fmt"/>
+		<SeekBar android:id="@+id/screwupVolume"
+			style="@style/VolumeSeekBar"
+			android:layout_gravity="right"/>
+
+		<include layout="@layout/divider_horizontal"/>
+		<LinearLayout style="@style/SettingLineLayout">
+			<org.tof.ui.FTextView 
+				style="@style/SettingLineLabel"
+				android:text="Notes delay (ms):"/>
+			<org.tof.ui.FEditText android:id="@+id/notesDelay"
+				style="@style/SettingLineIntegerEdit"/>
+		</LinearLayout>
+
+		<include layout="@layout/divider_horizontal"/>
+		<LinearLayout style="@style/SettingLineLayout">
+			<org.tof.ui.FTextView 
+				style="@style/SettingLineLabel"
+				android:text="Song cache length:"/>
+			<org.tof.ui.FEditText android:id="@+id/songCacheLength"
+				style="@style/SettingLineIntegerEdit"/>
+		</LinearLayout>
+		
+	</LinearLayout>
+	</ScrollView>
+
+	<ViewStub
+		android:id="@+id/pageAdvanced"
+		android:inflatedId="@+id/pageAdvanced"
+		android:layout="@layout/settings_advanced"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:visibility="invisible"/>
+
+ 
+</ViewFlipper>

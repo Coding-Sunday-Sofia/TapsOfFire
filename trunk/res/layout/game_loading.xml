@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.tof.ui.GameLoadingView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="@color/background">
+	
+	<ImageView android:id="@+id/icon"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerInParent="true"
+		android:src="@drawable/loading"/>
+		
+	<org.tof.ui.FTextView android:id="@+id/text"
+		style="@style/LargeText"
+		android:layout_alignParentBottom="true"
+		android:layout_centerHorizontal="true"
+		android:layout_marginBottom="@dimen/margin"
+		android:text="Loading..."/>
+    
+</org.tof.ui.GameLoadingView>

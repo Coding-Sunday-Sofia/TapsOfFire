@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	style="@style/ScrollView">
+<LinearLayout style="@style/FlippingPage"
+	android:orientation="vertical">
+	
+	<org.tof.ui.FTextView android:id="@+id/head"
+		style="@style/HeadText"
+		android:text="Advanced settings"/>
+
+	<include layout="@layout/divider_horizontal"/>
+	<LinearLayout style="@style/SettingLineLayout">
+		<org.tof.ui.FTextView 
+			style="@style/SettingLineLabel"
+			android:text="Early pick margin (beats):"/>
+		<org.tof.ui.FEditText android:id="@+id/earlyPickMargin"
+			style="@style/SettingLineDecimalEdit"/>
+	</LinearLayout>
+		
+	<include layout="@layout/divider_horizontal"/>
+	<LinearLayout style="@style/SettingLineLayout">
+		<org.tof.ui.FTextView 
+			style="@style/SettingLineLabel"
+			android:text="Late pick margin (beats):"/>
+		<org.tof.ui.FEditText android:id="@+id/latePickMargin"
+			style="@style/SettingLineDecimalEdit"/>
+	</LinearLayout>
+
+	<include layout="@layout/divider_horizontal"/>
+	<LinearLayout style="@style/SettingLineLayout">
+		<org.tof.ui.FTextView 
+			style="@style/SettingLineLabel"
+			android:text="Repick margin (beats):"/>
+		<org.tof.ui.FEditText android:id="@+id/repickMargin"
+			style="@style/SettingLineDecimalEdit"/>
+	</LinearLayout>
+
+	<include layout="@layout/divider_horizontal"/>
+	<LinearLayout style="@style/SettingLineLayout">
+		<org.tof.ui.FTextView 
+			style="@style/SettingLineLabel"
+			android:text="Minimum notes distance (ms):"/>
+		<org.tof.ui.FEditText android:id="@+id/minNotesDistance"
+			style="@style/SettingLineIntegerEdit"/>
+	</LinearLayout>
+
+	<org.tof.ui.FTextView 
+		style="@style/ListHeader"
+		android:layout_marginTop="@dimen/margin"
+		android:layout_marginBottom="@dimen/margin"
+		android:text="Even more advanced settings"/>
+	
+	<LinearLayout style="@style/SettingLineLayout">
+		<org.tof.ui.FTextView 
+			style="@style/SettingLineLabel"
+			android:text="Target FPS:"/>
+		<org.tof.ui.FEditText android:id="@+id/targetFPS"
+			style="@style/SettingLineIntegerEdit"/>
+	</LinearLayout>
+	<include layout="@layout/divider_horizontal"/>
+
+	<LinearLayout style="@style/SettingLineLayout">
+		<org.tof.ui.FTextView 
+			style="@style/SettingLineLabel"
+			android:text="Sleep in touch handler (ms):"/>
+		<org.tof.ui.FEditText android:id="@+id/touchHandlerSleep"
+			style="@style/SettingLineIntegerEdit"/>
+	</LinearLayout>
+	<include layout="@layout/divider_horizontal"/>
+	
+	<LinearLayout style="@style/SettingLineLayout">
+		<org.tof.ui.FTextView 
+			style="@style/SettingLineLabel"
+			android:text="Show debug info:"/>
+		<CheckBox android:id="@+id/showDebugInfo"
+			style="@style/SettingLineCheckbox"/>
+	</LinearLayout>
+	
+	<org.tof.ui.FireButton android:id="@+id/reset_settings"
+		style="@style/TextButton"
+		android:layout_marginTop="@dimen/margin"
+		android:text="Reset settings"/>
+			
+</LinearLayout>
+</ScrollView>

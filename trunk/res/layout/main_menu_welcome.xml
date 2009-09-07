@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	style="@style/ScrollView">
+<LinearLayout
+	android:id="@+id/layout"
+	style="@style/FlippingPage"
+	android:orientation="vertical">
+
+	<org.tof.ui.FTextView
+		style="@style/HeadText"
+		android:text="Welcome"/>
+
+	<TextView style="@style/ParagraphText"
+		android:text="@string/welcome_1"/>   
+
+	<org.tof.ui.ImageTutorialView
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/margin"
+		android:layout_marginBottom="@dimen/margin"/>
+
+	<org.tof.ui.FireButton android:id="@+id/play_first_time"
+		style="@style/FireButton"
+		android:layout_marginTop="@dimen/margin"
+		android:layout_gravity="center_horizontal"
+		android:text="Play"/>
+		
+</LinearLayout>
+</ScrollView>

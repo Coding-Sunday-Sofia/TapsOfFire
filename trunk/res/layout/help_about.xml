@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	style="@style/FlippingPage">
+	
+	<org.tof.ui.FTextView
+		style="@style/HeadText"
+		android:text="About"/>
+		
+	<org.tof.ui.FireButton
+		style="@style/NormalText"
+		android:background="@null"
+		android:layout_marginBottom="@dimen/view_padding"
+		android:text="@string/app_name_version"/>
+
+	<TextView
+		style="@style/ParagraphText"
+		android:textSize="@dimen/text_medium"
+		android:text="@string/about"/>
+	
+</LinearLayout>
