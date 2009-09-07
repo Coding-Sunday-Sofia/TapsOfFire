@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    style="@style/FlippingPage">
+        
+	<ViewFlipper android:id="@+id/extractorFlipper"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:inAnimation="@anim/push_left_in"
+	    android:outAnimation="@anim/push_left_out">
+
+	    <org.tof.ui.FTextView android:id="@+id/extractorHead"
+	    	style="@style/HeadText"
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:layout_gravity="top"
+	    	android:text="@string/extracting_song_fmt"/>
+
+	    <org.tof.ui.FireButton android:id="@+id/extractorPlay"
+	       	style="@style/FireButton"
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:layout_gravity="top|center_horizontal"
+	    	android:text="Play"/>
+	    
+    </ViewFlipper>
+
+    <TextView
+    	style="@style/ParagraphText"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:text="@string/extracting_song_text"/>
+    
+</LinearLayout>

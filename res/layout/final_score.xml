@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tof="http://schemas.android.com/apk/res/org.tof"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:gravity="center_horizontal"
+	android:padding="@dimen/view_padding">
+	
+	<org.tof.ui.FTextView android:id="@+id/head"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="@dimen/text_even_larger"
+		android:textColor="@color/base"
+		android:text="Song finished!"/>
+
+	<FrameLayout
+		android:orientation="horizontal"
+		android:layout_width="wrap_content"
+		android:layout_height="110px">
+		<org.tof.ui.FTextView android:id="@+id/score"
+			tof:fireTypeface="true"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:textSize="130px"
+			android:textColor="@color/button_text"
+			android:text="999999"/>
+	</FrameLayout>
+	
+	<RatingBar android:id="@+id/rating"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/margin"
+		style="@style/RatingBarLarge"
+		android:numStars="5"
+		android:stepSize="0.1"
+		android:isIndicator="true"/>
+
+	<org.tof.ui.FTextView android:id="@+id/accuracy"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		
+		android:textSize="@dimen/text_even_larger"
+		android:textColor="@color/base"
+		
+		android:text="Accuracy: 100%"/>
+
+	<org.tof.ui.FTextView android:id="@+id/streak"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="@dimen/text_even_larger"
+		android:textColor="@color/base"
+		android:text="Longest streak: 9999"/>
+		
+</LinearLayout>

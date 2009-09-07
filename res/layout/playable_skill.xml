@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.tof.ui.PlayableSkillView 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+	
+    <org.tof.ui.FireButton
+    	style="@style/FireButton"
+    	android:textSize="@dimen/text_large"
+    	android:id="@+id/play"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"/>
+
+	<RelativeLayout
+	    android:layout_weight="1"
+	    android:layout_width="0dip"
+	    android:layout_height="wrap_content"
+		android:layout_gravity="center_vertical">
+
+	    <org.tof.ui.FTextView android:id="@+id/score"
+	    	android:textColor="@color/base"
+	    	android:textSize="@dimen/text_normal"
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:layout_alignParentRight="true"
+	    	android:layout_alignParentTop="true"
+	    	android:text="score"/>
+
+	    <RatingBar android:id="@+id/rating"
+	    	style="@style/RatingBarSmall"
+	    	android:stepSize="0.1"
+	    	android:numStars="5"
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:layout_alignParentRight="true"
+	    	android:layout_below="@id/score"/>
+
+	    <org.tof.ui.FTextView android:id="@+id/notPlayed"
+	    	android:textColor="@color/base"
+	    	android:textSize="@dimen/text_small"
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:layout_alignParentRight="true"
+	    	android:layout_above="@id/rating"
+	    	android:text="not played"/>
+	    	
+	</RelativeLayout>
+
+</org.tof.ui.PlayableSkillView>

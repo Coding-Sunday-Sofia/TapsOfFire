@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Taps Of Fire (1.0.3)</string>
+    <string name="app_name_version">Taps Of Fire v1.0.3</string>
+    
+    <string name="dismiss">Dismiss</string>
+    <string name="send_report">Send report</string>
+    <string name="send_report_via">Send report via...</string>
+    <string name="please_report">Please send the following report to <b>Dmitry.Skiba@gmail.com</b>.</string>
+    <string name="crashes_sad_panda">Program has crashed. That makes me a very sad panda...</string>
+    <string name="errors_sad_panda">Unexpected errors make me a sad panda...</string>
+    <string name="crash_report">Crash report</string>
+    <string name="error_report">Error report</string>
+    
+    
+    <string name="longest_streak_fmt">Longest streak: %d</string>
+    <string name="accuracy_fmt">Accuracy: %d%%</string>
+    
+    <string name="menu_volume_fmt">Menu sounds volume:</string>
+    <string name="song_volume_fmt">Song volume:</string>
+    <string name="guitar_volume_fmt">Guitar volume:</string>
+    <string name="screwup_volume_fmt">Screw up volume:</string>
+    
+    <string name="no_sdcard">You have chosen to play song which comes bundled with TOF.\n\nBefore you can play song files need to be extracted from the application package.\n\nSong files are extracted to sdcard, however sdcard is currently inaccesible.\n\nPlease make it accessible and tap Continue.</string>
+
+    <string name="extracting_song_fmt">Extracting song (%d%%)...</string>
+    <string name="extracting_song_text">You have chosen to play song which comes bundled with TOF.\n\nBefore you can play song files need to be extracted from the application package.\n\nExtracted files are kept on your sdcard, so next time game will start immediately.</string>
+
+    <string name="converting_song_fmt">Decoding song (%d%%)...</string>
+    <string name="converting_song_text">Song files are currently being decoded from compressed format.\n\nPreliminary decoding increases smoothness of the game because it eliminates cpu-costly decoding at game time.\n\nDecoded files are kept on your sdcard, so next time game will start immediately.\n\nHowever you can abort decoding and start playing immediately by tapping progress text.</string>
+    
+    <string name="percent_done_fmt">%d%% done</string>
+    
+    <string name="error_loading_song">Error loading song.</string>
+    <string name="error_playing_song">Error playing song.</string>
+    
+    <string name="welcome_1">Greetings player and thank you for trying Taps of Fire!\n\nLet me provide you a minimum information to start playing immediately.\n\nThis game actually is very similar to Guitar Hero (R) and other rhythm-based games, you need to pick up notes as they come to the bottom of the screen along with music.\n\nThe following tutorial explains gameplay in detail. Tap an image for the next frame.</string>
+
+	<string name="tutorial_1">There are three strings and three corresponding keys...</string>
+	<string name="tutorial_2">When note comes down tap appropriate key. For convenience tap zones are twice as tall as keys.</string>
+	<string name="tutorial_3">Holding key while note passes gets you more scores.</string>
+	<string name="tutorial_4">When two adjacent notes come down things get a little tricky...</string>
+	<string name="tutorial_5">It this case you need to tap between the keys.</string>
+	<string name="tutorial_6">What about situation when green+yellow or all three notes come down?</string>
+	<string name="tutorial_7">In this case you need to tap middle key. Red, green+yellow, and all three notes are picked using red key.</string>
+	<string name="tutorial_8">Good luck!</string>
+    
+    <string name="about">"TOF was programmed by Dmitry Skiba.\nIt is an open source project hosted at\n<a href='http://code.google.com/p/tapsoffire'>http://code.google.com/p/tapsoffire</a>"\n\nIn fact TOF is an Android\'s reimplementation of an excellent open source game <a href='http://fretsonfire.sourceforge.net'>Frets on Fire</a> and uses it\'s data files.\n\nSongs are by <a href='http://www.nivel21.net/personal/sectoid/web/index.php'>Sectoid</a> and <a href='http://api.newgrounds.com'>-API-</a>.\n\nOther stuff: Seaweed Fire AOE font by <a href='http://www.astigmatic.com/freeware.html'>Astigmatic One Eye</a>, Seriffic Grunge font by Eric Perlin.</string>
+    <string name="get_songs">Because TOF originated from Frets on Fire, it understands it\'s songs. There are plenty of them on the Internet. Just google for \'FOF songname\', for example \'FOF Sonic Clang\'. After you get songs put them on the sdcard in TapsOfFire/songs folder, and they are ready to play!</string>
+	<string name="how_to_play">TOF\'s gameplay is much like all other rhythm-based games: song is playing, notes are coming. And your goal is to pick them.\nThe following interactive tutorial illustrates gameplay. Click an image to get to the next frame.</string>
+	
+	<string name="misc_1">As you may have noticed TOF does not support landscape orientation. This is primarily because it\'s hard to play in that mode. The second reason is that I didn\'t have enough time to properly investigate it. Maybe support for landspace mode will appear in next versions.</string>
+	<string name="misc_2">In case you wonder why Settings screen is not fullscreen, that is because in fullscreen mode soft keyboard overlaps controls which are at the bottom of the view. This behaviour seems to be by design, so some kind of hacking and tweaking were needed. Unfortunately I didn\'t have time for that.</string>
+	<string name="misc_3">You may tweak picking rules and other parts of program behavior in Advanced settings. To get there press MENU key in Settings screen.</string>
+	<string name="misc_4">Note about caching. TOF uses folder /sdcard/TapsOfFire/cache for caching. Bundled songs and uncompressed music files are stored there. There is a setting, called \'cache length\' which limits number of entries in the cache. You can tweak it on advanced settings page.</string>    
+
+	<string name="adc_note">Taps Of Fire is taking part in <a href='http://code.google.com/intl/ru/android/adc/'>Android Developers Challenge</a>.\nThis version is newer than that submitted for ADC, and always will be, as there is no way to update submitted application.\nIn fact, from phone\'s point of view, this version and ADC\'s one are completely different programs.\nSo, during ADC judging you might end up with two \'Taps Of Fire\'s installed on your phone. Distinguishing them is simple: this and all upcoming versions have version number in their names. ADC\'s version is called just \'Taps Of Fire\'.\nAnyway, please don\'t let all this mess stop you from accepting and rating my ADC entry ;)</string>
+</resources>

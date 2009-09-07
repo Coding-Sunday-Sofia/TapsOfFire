@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:paddingTop="@dimen/view_padding"
+	android:paddingLeft="@dimen/view_padding"
+	android:background="@drawable/browser_background">
+		
+	<org.tof.ui.FTextView android:id="@+id/head"
+		style="@style/HeadText"
+		android:text="Song browser"/>
+	
+	<org.tof.ui.NotFocusableListView android:id="@+id/list"
+		style="@style/ListView"
+		android:layout_width="fill_parent"
+		android:layout_height="0px"
+		android:layout_weight="1"/>
+
+</LinearLayout>

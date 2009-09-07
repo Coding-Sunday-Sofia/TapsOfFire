@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ViewFlipper
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/flipper"
+	style="@style/LayoutFlipper"
+	android:background="@drawable/help_background">
+    
+	<LinearLayout android:id="@+id/layout"
+		android:orientation="vertical"
+		style="@style/FlippingPage">
+		
+		<org.tof.ui.FTextView android:id="@+id/head"
+			style="@style/HeadText"
+			android:text="Help"/>
+
+		<org.tof.ui.FireButton android:id="@+id/how_to_play"
+			style="@style/HelpButton"
+			android:text="How to play"/>
+
+		<org.tof.ui.FireButton android:id="@+id/get_songs"
+			style="@style/HelpButton"
+			android:text="Where to get songs"/>
+
+		<org.tof.ui.FireButton android:id="@+id/misc"
+			style="@style/HelpButton"
+			android:text="Random facts"/>
+
+		<org.tof.ui.FireButton android:id="@+id/about"
+			style="@style/HelpButton"
+			android:text="About"/>
+		
+	</LinearLayout>
+	
+	<ViewStub
+		android:id="@+id/page_how_to_play"
+		android:inflatedId="@+id/page_how_to_play"
+		android:layout="@layout/help_how_to_play"
+		android:visibility="invisible"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"/>
+		
+	<ViewStub
+		android:id="@+id/page_get_songs"
+		android:inflatedId="@+id/page_get_songs"
+		android:layout="@layout/help_get_songs"
+		android:visibility="invisible"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"/>
+
+	<ViewStub
+		android:id="@+id/page_misc"
+		android:inflatedId="@+id/page_misc"
+		android:layout="@layout/help_misc"
+		android:visibility="invisible"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"/>
+
+	<ViewStub
+		android:id="@+id/page_about"
+		android:inflatedId="@+id/page_about"
+		android:layout="@layout/help_about"
+		android:visibility="invisible"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"/>
+	
+</ViewFlipper>	
