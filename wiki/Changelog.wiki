@@ -1,3 +1,8 @@
+*TOF current version*
+  * Fixed list background
+  * Fixed disappearing scores
+  * ...
+
 *TOF 1.0.3*, 05/09/2009
   * Corrected midi parsing
   * Corrected BPM change handling (now bpm changes immediately)
