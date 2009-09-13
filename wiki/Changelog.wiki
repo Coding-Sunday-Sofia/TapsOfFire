@@ -1,6 +1,8 @@
 *TOF current version*
   * Fixed list background
   * Fixed disappearing scores
+  * Song scanning process now on it's own page
+  * 'Scan for songs' menu command in song browser
   * ...
 
 *TOF 1.0.3*, 05/09/2009
