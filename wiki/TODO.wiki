@@ -1,0 +1,3 @@
+  * Always check for sdcard 
+  * Build script
+  * Menu in Settings
