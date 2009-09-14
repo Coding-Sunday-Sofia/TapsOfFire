@@ -1,4 +1,4 @@
-*TOF current version*
+*TOF 1.0.4*, 14/09/2009
   * Fixed list background
   * Fixed disappearing scores
   * Song loading process now on it's own page
