@@ -1,3 +1,4 @@
   * Always check for sdcard 
   * Build script
   * Menu in Settings
+  * Exclude audio files (.nomedia file) + checkbox in settings
