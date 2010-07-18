@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ViewFlipper
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	style="@style/PageFlipper"
+	android:id="@+id/page_flipper"
+	android:background="@drawable/browser_background">
+
+	<LinearLayout 
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"		
+		android:orientation="vertical">
+			
+		<org.tof.ui.FTextView android:id="@+id/head"
+			style="@style/HeadText"
+			android:text="Song browser"/>
+		
+		<org.tof.ui.NotFocusableListView android:id="@+id/list"
+			style="@style/ListView"
+			android:layout_width="fill_parent"
+			android:layout_height="0px"
+			android:layout_weight="1"/>
+	
+	</LinearLayout>
+	
+	<ViewStub
+		android:layout="@layout/browser_loader"
+		android:visibility="invisible"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"/>
+	
+</ViewFlipper>

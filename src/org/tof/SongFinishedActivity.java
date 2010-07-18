@@ -19,8 +19,8 @@ package org.tof;
 
 import java.io.IOException;
 import org.tof.R;
+import org.tof.song.FinishedSongInfo;
 import org.tof.ui.ActivityBase;
-import org.tof.ui.FinishedSongInfo;
 import org.tof.ui.UIHelpers;
 import org.tof.util.DataInputBA;
 import android.os.Bundle;

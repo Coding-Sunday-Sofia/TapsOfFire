@@ -20,7 +20,6 @@ package org.tof;
 import org.tof.R;
 import org.tof.ui.ActivityBase;
 import org.tof.ui.UIHelpers;
-import org.tof.ui.UISoundEffects;
 import org.tof.util.MathHelpers;
 import android.os.Bundle;
 import android.view.Menu;
@@ -36,6 +35,8 @@ public class SettingsActivity extends ActivityBase implements SeekBar.OnSeekBarC
 		super.onCreate(savedState);
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.settings);
+		usePageFlipper(savedState);
+		
 		for (int i=0;i!=Config.COUNTOF_VOLUMES;++i) {
 			setupVolumeControl(i);
 		}
@@ -44,7 +45,7 @@ public class SettingsActivity extends ActivityBase implements SeekBar.OnSeekBarC
 	protected void onResume() {
 		super.onResume();
 		loadValues();
-		if (!m_showingAdvancedPage) {
+		if (getCurrentPage()==PAGE_MAIN) {
 			UIHelpers.animateHeadAndBody(this,R.id.layout);
 		}
 	}
@@ -55,17 +56,17 @@ public class SettingsActivity extends ActivityBase implements SeekBar.OnSeekBarC
 		Config.store(this);		
 	}
 	
-	protected boolean onBackKeyDown() {
-		UISoundEffects.playOutSound();
-		if (m_showingAdvancedPage) {
-			showAdvancedPage(false);
-			return true;
-		}
-		return false;
-	}
+//	protected boolean onBackKeyDown() {
+//		UISoundEffects.playOutSound();
+//		if (getCurrentPage()==PAGE_ADVANCED) {
+//			flipToPage(PAGE_MAIN,true);
+//			return true;
+//		}
+//		return false;
+//	}
 
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		showAdvancedPage(!m_showingAdvancedPage);
+		flipToPage(PAGE_ADVANCED,true);
 		return true;
 	}
 	
@@ -121,13 +122,8 @@ public class SettingsActivity extends ActivityBase implements SeekBar.OnSeekBarC
 		Config.showDebugInfo(getBooleanValue(R.id.showDebugInfo));
 	}
 	
-	private void showAdvancedPage(boolean show) {
-		if (m_showingAdvancedPage==show) {
-			return;
-		}
-		if (!m_advancedPageInitialized) {
-			UIHelpers.setViewVisibility(this,R.id.pageAdvanced,View.VISIBLE);
-			m_advancedPageInitialized=true;
+	protected void doPageAction(int page,int action) {
+		if (page==PAGE_ADVANCED && action==PAGEACTION_INITIALIZE) {
 			findViewById(R.id.reset_settings).setOnClickListener(
 				new View.OnClickListener() {
 					public void onClick(View view) {
@@ -135,10 +131,9 @@ public class SettingsActivity extends ActivityBase implements SeekBar.OnSeekBarC
 					}
 				}
 			);
+			m_advancedPageInitialized=true;
 			loadAdvancedValues();
 		}
-		UIHelpers.flipToChild(this,R.id.flipper,show?1:0,true);
-		m_showingAdvancedPage=show;
 	}
 	
 	/////////////////////////////////////////////////////// main page
@@ -259,7 +254,8 @@ public class SettingsActivity extends ActivityBase implements SeekBar.OnSeekBarC
 	/////////////////////////////////////////////////////// data
 	
 	private boolean m_advancedPageInitialized;
-	private boolean m_showingAdvancedPage;
+	
+	private static final int PAGE_ADVANCED=1;
 	
 	private static final int MAX_VOLUME=10;
 	private static final float VOLUME_STEP=0.5f;

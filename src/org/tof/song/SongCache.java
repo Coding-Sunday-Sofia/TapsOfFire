@@ -15,12 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-package org.tof.songdb;
+package org.tof.song;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Date;
 import org.tof.Config;
 import org.tof.util.MiscHelpers;
 
@@ -53,7 +52,7 @@ public class SongCache {
 	public static void touch(int songID) {
 		File songPath=getPath(songID);
 		if (songPath.exists()) {
-			songPath.setLastModified(new Date().getTime());
+			songPath.setLastModified(System.currentTimeMillis());
 		}
 	}
 	

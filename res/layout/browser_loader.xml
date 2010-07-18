@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	style="@style/FlippingPage">
+	
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerVertical="true">
+ 
+		<org.tof.ui.FTextView
+			style="@style/HeadText"
+			android:text="@string/loading_songs"/>
+	
+		<org.tof.ui.FTextView android:id="@+id/songs_loaded"
+			style="@style/NormalText"
+			android:singleLine="true"
+		    android:ellipsize="end"
+			android:textColor="#FFFFFF80"
+			android:text="@string/songs_loaded_fmt"/>
+			
+		<org.tof.ui.FTextView android:id="@+id/song_0"
+			style="@style/SmallText"
+			android:singleLine="true"
+		    android:ellipsize="end"
+			android:textColor="#FFFFFF80"/>
+			
+		<org.tof.ui.FTextView android:id="@+id/song_1"
+			style="@style/SmallText"
+			android:singleLine="true"
+		    android:ellipsize="end"
+			android:textColor="#80FFFF80"/>
+		
+		<org.tof.ui.FTextView android:id="@+id/song_2"
+			style="@style/SmallText"
+			android:singleLine="true"
+		    android:ellipsize="end"
+			android:textColor="#40FFFF80"/>
+	
+		<org.tof.ui.FTextView android:id="@+id/song_3"
+			style="@style/SmallText"
+			android:singleLine="true"
+		    android:ellipsize="end"
+			android:textColor="#20FFFF80"/>
+	
+	</LinearLayout>
+		
+</RelativeLayout>

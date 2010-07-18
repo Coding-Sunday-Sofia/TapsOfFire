@@ -17,23 +17,19 @@
 */
 package org.tof;
 
-import java.io.File;
 import java.io.IOException;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-import org.tof.R;
 import org.tof.gl.GLHelpers;
 import org.tof.gl.GLRect;
-import org.tof.song.InvalidSongException;
+import org.tof.song.FinishedSongInfo;
 import org.tof.song.Song;
-import org.tof.songdb.SongDB;
+import org.tof.song.SongDB;
+import org.tof.song.SongInfo;
 import org.tof.stage.Stage;
 import org.tof.ui.ActivityBase;
-import org.tof.ui.FinishedSongInfo;
 import org.tof.ui.GameLoadingView;
 import org.tof.ui.GameMenuView;
-import org.tof.ui.SongInfo;
-import org.tof.ui.UISoundEffects;
 import org.tof.util.DataInputBA;
 import org.tof.util.DataOutputBA;
 import org.tof.util.GameFPSTimer;
@@ -62,22 +58,22 @@ public class GameActivity extends ActivityBase implements GameMenuView.Callback 
 			byte[] songState=intent.getByteArrayExtra(SongInfo.BUNDLE_KEY);
 			if (songState!=null) {
 				m_songInfo=new SongInfo(new DataInputBA(songState));
-//				//Log.e("TOF","Song file: "+m_songInfo.getSongFile().getPath());
-//				//Log.e("TOF","Guitar file: "+m_songInfo.getGuitarFile().getPath());
 			} else {
 				finish();
-				
-//				m_songInfo=new SongInfo(
-//					new File("/sdcard/API")
-////					new File("/sdcard/TapsOfFire/cache/39EDB0AB")
-////					//new File("/sdcard/Sectoid")
-//					//new File("/sdcard/TapsOfFirez/songs/Sonic Clang") 
-//					//new File("/sdcard/TapsOfFirez/songs/bangbang")
-////					//new File("/sdcard/defy_bpm")
-//				);
-//				//m_songInfo.setGuitarFile(new File("/sdcard/TapsOfFire/songs/defy/guitar.raw"));
-//				//m_songInfo.setSongFile(new File("/sdcard/TapsOfFire/songs/defy/song.raw"));
-//				m_songInfo.setSelectedSkill(Song.SKILL_MEDIUM);
+//				try {
+//					m_songInfo=new SongInfo(
+//						new java.io.File("/sdcard/API")
+//						//new File("/sdcard/TapsOfFire/cache/39EDB0AB")
+//						//new File("/sdcard/Sectoid")
+//						//new File("/sdcard/TapsOfFirez/songs/Sonic Clang") 
+//						//new File("/sdcard/TapsOfFirez/songs/bangbang")
+//						//new File("/sdcard/defy_bpm")
+//					);
+//					m_songInfo.setSelectedSkill(Song.SKILL_MEDIUM);
+//				}
+//				catch (org.tof.song.InvalidSongException e) {
+//					throw new RuntimeException(e);
+//				}
 			}
 			if (savedState!=null) {
 				m_stageState=savedState.getByteArray(KEY_ACTIVITY_STATE);
@@ -86,9 +82,6 @@ public class GameActivity extends ActivityBase implements GameMenuView.Callback 
 		catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-//		catch (InvalidSongException e) {
-//			throw new RuntimeException(e);
-//		}
 		CrashHandler.setDetails(m_songInfo.getErrorDetails());
 	}
 	
@@ -246,16 +239,6 @@ public class GameActivity extends ActivityBase implements GameMenuView.Callback 
 				m_stage.stop(true);
 				m_stage.resetState();
 				m_stage.start();
-//				try {
-//					byte[] state=m_stage.saveState();
-//					m_stage.stop(false);
-//					m_stage.resetState();
-//					m_stage.restoreState(state);
-//					m_stage.start();
-//				}
-//				catch (IOException e) {
-//					e.printStackTrace();
-//				}
 				break;
 			}
 			case StageAction.START:
@@ -289,7 +272,7 @@ public class GameActivity extends ActivityBase implements GameMenuView.Callback 
 			SongDB.update(
 				m_songInfo.getID(),
 				m_songInfo.getSelectedSkill(),
-				score.score,score.accuracy);
+				new SongDB.Score(score.score,score.accuracy));
 			Intent intent=new Intent(this,SongFinishedActivity.class);
 			try {
 				DataOutputBA dataOut=new DataOutputBA();
@@ -403,11 +386,28 @@ public class GameActivity extends ActivityBase implements GameMenuView.Callback 
 		m_menuView.setCallback(this);
 	}
 
-///////////////////////////////////////////////////////////////// GL
+	///////////////////////////////////////////////////////////////// GL
 	
 	private void addGLView() {
         m_glView=new GLSurfaceView(this);
-        m_glView.setEGLConfigChooser(false);
+        m_glView.setEGLConfigChooser(true);
+//        m_glView.setEGLConfigChooser(
+//        	// Samsung Galaxy hack
+//			new GLSurfaceView.EGLConfigChooser() {
+//				public EGLConfig chooseConfig(EGL10 egl,EGLDisplay display) {
+//					int[] attributes=new int[]{
+//						EGL10.EGL_DEPTH_SIZE,
+//						16,
+//						EGL10.EGL_NONE
+//					};
+//					EGLConfig[] configs=new EGLConfig[1];
+//					int[] result=new int[1];
+//					egl.eglChooseConfig(display,attributes,configs,1,result);
+//					return configs[0];
+//				}
+//			}
+//		);
+        
         m_glView.setRenderer(new GLSurfaceView.Renderer() {
         	public void onSurfaceCreated(GL10 gl,EGLConfig config) {
         		attachGLCrashHandler();
@@ -454,7 +454,7 @@ public class GameActivity extends ActivityBase implements GameMenuView.Callback 
 		}
 	}
 	
-///////////////////////////////////////////////////////////////// menu
+	///////////////////////////////////////////////////////////////// menu
 	
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);

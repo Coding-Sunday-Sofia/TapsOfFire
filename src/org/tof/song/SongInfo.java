@@ -15,16 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-package org.tof.ui;
+package org.tof.song;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;
 import java.io.IOException;
-import org.tof.song.InvalidSongException;
-import org.tof.song.Song;
-import org.tof.song.SongConfig;
-import org.tof.song.SongIni;
 import org.tof.util.DataStreamHelpers;
 import android.content.res.AssetManager;
 

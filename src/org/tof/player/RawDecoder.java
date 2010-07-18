@@ -110,6 +110,7 @@ public class RawDecoder implements PCMDecoder {
 	
 	private static int timeToOffset(int time,int rate,int channels) {
 		long offset=(long)rate*channels*SAMPLE_BYTES*time/1000;
+		offset-=(offset%(channels*SAMPLE_BYTES));
 		return (int)(HEADER_SIZE+offset);
 	}
 	

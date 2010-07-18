@@ -23,6 +23,7 @@ import org.tof.R;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -37,6 +38,8 @@ public class ErrorReportActivity extends Activity implements View.OnClickListene
 		{
 			StringBuilder fullReport=new StringBuilder(128);
 			fullReport.append(getString(R.string.app_name_version)).append('\n');
+			fullReport.append(Build.MODEL).append(", ").append(Build.DISPLAY).append('\n');
+			
 			String details=getIntent().getStringExtra(EXTRA_DETAILS);
 			if (details!=null) {
 				fullReport.append(details).append("\n");
