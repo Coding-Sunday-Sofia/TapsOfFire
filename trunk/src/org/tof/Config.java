@@ -146,7 +146,7 @@ public class Config {
 		if (volumeIndex<0 || volumeIndex>=COUNTOF_VOLUMES) {
 			return;
 		}
-		modified();
+		setModified();
 		volume=Math.min(Math.max(0,volume),1);
 		m_absoluteVolumes[volumeIndex]=volume;
 	}
@@ -179,7 +179,7 @@ public class Config {
 	}
 	public static void setSongCacheLength(int length) {
 		m_songCacheLength=length;
-		modified();
+		setModified();
 	}
 	
 	/////////////////////////////////// other values
@@ -189,7 +189,7 @@ public class Config {
 	}
 	public static void setNotesDelay(int delay) {
 		m_notesDelay=delay;
-		modified();
+		setModified();
 	}
 	
 	public static float getEarlyPickMargin() {
@@ -197,7 +197,7 @@ public class Config {
 	}
 	public static void setEarlyPickMargin(float margin) {
 		m_earlyPickMargin=margin;
-		modified();
+		setModified();
 	}
 	
 	public static float getLatePickMargin() {
@@ -205,7 +205,7 @@ public class Config {
 	}
 	public static void setLatePickMargin(float margin) {
 		m_latePickMargin=margin;
-		modified();
+		setModified();
 	}
 
 	public static float getRepickMargin() {
@@ -213,7 +213,7 @@ public class Config {
 	}
 	public static void setRepickMargin(float margin) {
 		m_repickMargin=margin;
-		modified();
+		setModified();
 	}
 	
 	public static int getMinNotesDistance() {
@@ -221,7 +221,7 @@ public class Config {
 	}
 	public static void setMinNotesDistance(int distance) {
 		m_minNotesDistance=distance;
-		modified();
+		setModified();
 	}
 	
 	public static int getTargetFPS() {
@@ -229,7 +229,7 @@ public class Config {
 	}
 	public static void setTargetFPS(int fps) {
 		m_targetFPS=fps;
-		modified();
+		setModified();
 	}
 	
 	public static int getTouchHandlerSleep() {
@@ -237,7 +237,7 @@ public class Config {
 	}
 	public static void setTouchHandlerSleep(int sleep) {
 		m_touchHandlerSleep=sleep;
-		modified();
+		setModified();
 	}
 	
 	public static boolean showDebugInfo() {
@@ -245,7 +245,7 @@ public class Config {
 	}
 	public static void showDebugInfo(boolean show) {
 		m_showDebugInfo=show;
-		modified();
+		setModified();
 	}
 	
 	/////////////////////////////////// defaults
@@ -302,7 +302,7 @@ public class Config {
 		for (int i=0;i!=COUNTOF_VOLUMES;++i) {
 			m_absoluteVolumes[i]=DEFAULT_ABSOLUTE_VOLUMES[i];
 		}
-		modified();
+		setModified();
 	}
 	
 	private static void loadResources(Context context) {
@@ -388,7 +388,7 @@ public class Config {
 		editor.commit();
 	}
 	
-	private static void modified() {
+	private static void setModified() {
 		m_modificationTime=new Date().getTime();
 	}
 	

@@ -139,7 +139,7 @@ public class Vorbis2RawConverter {
 	}
 	
 	private void threadRun() {
-		Simply.setThreadPriority(Process.THREAD_PRIORITY_DISPLAY);
+		Simply.setThreadPriority(m_threadPriority);
 		Exception error=null;
 		try {
 			RawDecoder.writeHeader(

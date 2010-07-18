@@ -26,35 +26,22 @@ import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ViewFlipper;
 
 public class MainMenuActivity extends ActivityBase implements View.OnClickListener {
 	
 	protected void onCreate(Bundle savedState) {
 		super.onCreate(savedState);
 		setContentView(R.layout.main_menu);
-		
-		m_pageFlipper=(ViewFlipper)findViewById(R.id.flipper);
+		usePageFlipper(savedState);
 		
 		findViewById(R.id.play).setOnClickListener(this);
 		findViewById(R.id.settings).setOnClickListener(this);
 		findViewById(R.id.help).setOnClickListener(this);
-		findViewById(R.id.adc).setOnClickListener(this);
-		
-		if (savedState!=null) {
-			int page=savedState.getInt(KEY_ACTIVITY_STATE,PAGE_MAIN);
-			showPage(page,false);
-		}
 		
 		m_player=MediaPlayer.create(this,R.raw.menu);
 		if (m_player!=null) {
 			m_player.setLooping(true);
 		}
-	}
-	
-	protected void onSaveInstanceState(Bundle state) {
-		super.onSaveInstanceState(state);
-		state.putInt(KEY_ACTIVITY_STATE,getCurrentPage());		
 	}
 	
 	protected void onPause() {
@@ -74,7 +61,7 @@ public class MainMenuActivity extends ActivityBase implements View.OnClickListen
 		if (getCurrentPage()==PAGE_WELCOME &&
 			!checkUpdateFirstTime(false))
 		{
-			showPage(PAGE_MAIN,false);
+			flipToPage(PAGE_MAIN,false);
 		}
 		if (getCurrentPage()==PAGE_MAIN) {
 			startAnimation();
@@ -93,7 +80,7 @@ public class MainMenuActivity extends ActivityBase implements View.OnClickListen
 	public boolean onBackKeyDown() {
 		UISoundEffects.playOutSound();
 		if (getCurrentPage()!=PAGE_MAIN) {
-			showPage(PAGE_MAIN,true);
+			flipToPage(PAGE_MAIN,true);
 			return true;
 		}
 		return false;
@@ -105,9 +92,9 @@ public class MainMenuActivity extends ActivityBase implements View.OnClickListen
 				checkUpdateFirstTime(true);
 			case R.id.play:
 				if (checkUpdateFirstTime(false)) {
-					showPage(PAGE_WELCOME,true);
+					flipToPage(PAGE_WELCOME,true);
 				} else {
-					startActivity(new Intent(this,SongBrowserActivity.class));
+					startActivity(new Intent(this,BrowserActivity.class));
 				}
 				break;
 			case R.id.settings:
@@ -115,9 +102,6 @@ public class MainMenuActivity extends ActivityBase implements View.OnClickListen
 				break;
 			case R.id.help:
 				startActivity(new Intent(this,HelpActivity.class));
-				break;
-			case R.id.adc:
-				showPage(PAGE_ADC,true);
 				break;
 		}
 	}
@@ -149,22 +133,10 @@ public class MainMenuActivity extends ActivityBase implements View.OnClickListen
 	
 	///////////////////////////////////////////// pages
 	
-	private int getCurrentPage() {
-		return m_pageFlipper.getDisplayedChild();
-	}
-	
-	private void showPage(int page,boolean animate) {
-		if (getCurrentPage()==page) {
-			return;
+	protected void doPageAction(int page,int action) {
+		if (page==PAGE_WELCOME && action==PAGEACTION_INITIALIZE) {
+			findViewById(R.id.play_first_time).setOnClickListener(this);
 		}
-		View pageView=m_pageFlipper.getChildAt(page);
-		if (pageView.getVisibility()!=View.INVISIBLE) {
-			pageView.setVisibility(View.VISIBLE);
-			if (page==PAGE_WELCOME) {
-				findViewById(R.id.play_first_time).setOnClickListener(this);
-			}
-		}
-		UIHelpers.flipToChild(m_pageFlipper,page,animate);
 	}
 
 	private boolean checkUpdateFirstTime(boolean update) {
@@ -189,10 +161,7 @@ public class MainMenuActivity extends ActivityBase implements View.OnClickListen
 	///////////////////////////////////////////// data
 	
 	private MediaPlayer m_player;
-	private ViewFlipper m_pageFlipper;
 	
 	private static final int
-		PAGE_MAIN		=0,
-		PAGE_WELCOME	=1,
-		PAGE_ADC		=2;
+		PAGE_WELCOME	=1;
 }

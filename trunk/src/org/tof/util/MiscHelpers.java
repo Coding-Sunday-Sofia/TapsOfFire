@@ -20,6 +20,7 @@ package org.tof.util;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Date;
 import android.net.Uri;
 
 public class MiscHelpers {
@@ -35,12 +36,13 @@ public class MiscHelpers {
 	
 	public static final void cleanup(File path) {
 		File[] files=path.listFiles();
-		for (File file: files) {
-			if (file.isDirectory()) {
-				cleanup(file);
+		if (files!=null) {
+			for (File file: files) {
+				if (file.isDirectory()) {
+					cleanup(file);
+				}
+				file.delete();
 			}
-			file.delete();
 		}
 	}
-
 }

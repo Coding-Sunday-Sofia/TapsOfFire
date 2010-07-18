@@ -17,58 +17,89 @@
 */
 package org.tof;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import org.tof.R;
 import org.tof.song.InvalidSongException;
+import org.tof.song.SongInfo;
 import org.tof.ui.ActivityBase;
-import org.tof.ui.SongInfo;
 import org.tof.ui.UIHelpers;
-import org.tof.ui.UISoundEffects;
-import org.tof.util.DataInputBA;
 import org.tof.util.DataOutputBA;
+import skiba.util.Simply;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class SongBrowserActivity extends ActivityBase implements ListAdapter, OnItemClickListener {
+public class BrowserActivity extends ActivityBase implements ListAdapter, OnItemClickListener {
 	
 	protected void onCreate(Bundle savedState) {
 		super.onCreate(savedState);
-		setContentView(R.layout.song_browser);
-
+		setContentView(R.layout.browser);
+		usePageFlipper(savedState);
+		
 		m_recentSongs=new ArrayList<SongInfo>();
 		m_songs=new ArrayList<SongInfo>();
-		{
-			ListView list=(ListView)findViewById(R.id.list);
-			list.setAdapter(this);
-			list.setOnItemClickListener(this);
+		
+		if (obtainSongsCookie()) {
+			if (!restoreSongs()) {
+				flipToPage(PAGE_LOADER,true);
+				startLoading();
+			}
+		} else {
+			startLoading();
 		}
-		loadSongs(savedState);
+		
+		ListView list=(ListView)findViewById(R.id.list);
+		list.setAdapter(this);
+		list.setOnItemClickListener(this);
+	}
+	
+	protected void onPause() {
+		super.onPause();
+		pauseLoading();
 	}
 	
 	protected void onResume() {
 		super.onResume();
+		resumeLoading();
 	}
 	
-	protected void onSaveInstanceState(Bundle state) {
-		super.onSaveInstanceState(state);
-		saveSongs(state);
+	protected void onDestroy() {
+		super.onDestroy();
+		stopLoading(true);
 	}
 	
-	protected boolean onBackKeyDown() {
-		UISoundEffects.playOutSound();
-		return false;
+	protected View onCreateMenuView() {
+		if (getCurrentPage()!=PAGE_MAIN) {
+			return null;
+		}
+		return getLayoutInflater().inflate(R.layout.menu_browser,null);
+	}
+	
+	public void onMenuItemClick(int id) {
+		if (id==R.id.scan) {
+			flipToPage(PAGE_LOADER,true);
+			obtainSongsCookie();
+			startLoading();
+			return;
+		}
+	}
+	
+	protected boolean onBackToMainPage() {
+		return true;
 	}
 	
 	/////////////////////////////////////////////////////// logic
@@ -89,100 +120,124 @@ public class SongBrowserActivity extends ActivityBase implements ListAdapter, On
 	
 	private void onSongLoaded(SongInfo song) {
 		addSorted(m_songs,song);
-//		if (song.getName().startsWith("D")) {
-//			addSorted(m_recentSongs,song);
-//		}
 		notifyDataSetChanged();
 	}
 	
 	private void onLoadingFinished() {
-		m_loading=false;
-		notifyDataSetChanged();
+		saveSongs();
+		flipToPage(PAGE_MAIN,true);
 	}
 	
-	/////////////////////////////////////////////////////// sorting
-
-	private static void addSorted(ArrayList<SongInfo> songs,SongInfo song) {
-		int i=Collections.binarySearch(songs,song,SONG_COMPARATOR);
-		if (i<0) {
-			i=-i-2;
-		}
-		songs.add(i+1,song);
-	}
+	/////////////////////////////////////////////////////// songs
 	
-	private static class SongComparator implements Comparator<SongInfo> {
-		public int compare(SongInfo x,SongInfo y) { 
-			return x.getName().compareTo(y.getName());
-		}
-		public boolean equals(SongComparator other) {
-			return true;
-		}
-	}
-	
-	private static final SongComparator SONG_COMPARATOR=new SongComparator();
-	
-	/////////////////////////////////////////////////////// loading
-	
-	private void saveSongs(Bundle bundle) {
-		if (m_loading) {
-			return;
-		}
-		DataOutputBA dataOut=new DataOutputBA();
+	private void saveSongs() {
 		try {
+			OutputStream stream=openFileOutput(SONGS_FILE,0);
+			DataOutputStream dataOut=new DataOutputStream(stream);
+			dataOut.writeLong(m_songsCookie);
 			dataOut.writeInt(m_songs.size());
-			for (SongInfo song: m_songs) {
-				song.saveState(dataOut);
+			for (int i=0,e=m_songs.size();i!=e;++i) {
+				m_songs.get(i).saveState(dataOut);
 			}
-			bundle.putByteArray(KEY_ACTIVITY_STATE,dataOut.toByteArray());
+			dataOut.flush();
+			stream.flush();
+			stream.close();
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			//
 		}
 	}
 	
-	private boolean restoreSongs(Bundle bundle) {
-		if (bundle==null) {
-			return false;
+	private boolean obtainSongsCookie() {
+		m_songsCookie=0;
+		File path=Config.getSongsPath();
+		if (path.exists()) {
+			String[] files=path.list();
+			if (files!=null && files.length!=0) {
+				m_songsCookie=path.lastModified()*files.length;
+				return true;
+			}
 		}
-		byte[] songs=bundle.getByteArray(KEY_ACTIVITY_STATE);
-		if (songs==null) {
-			return false;
-		}
-		m_recentSongs.clear();
-		m_songs.clear();
+		return false;
+	}
+	
+	private boolean restoreSongs() {
 		try {
-			DataInputBA dataIn=new DataInputBA(songs);
+			InputStream stream=openFileInput(SONGS_FILE);
+			DataInputStream dataIn=new DataInputStream(stream);
+			long cacheTime=dataIn.readLong();
+			if (m_songsCookie!=cacheTime) {
+				return false;
+			}
 			int count=dataIn.readInt();
 			for (int i=0;i!=count;++i) {
-				onSongLoaded(new SongInfo(dataIn));
+				onSongLoaded(new SongInfo(dataIn));				
 			}
 			return true;
 		}
 		catch (IOException e) {
-			e.printStackTrace();
 			return false;
 		}
 	}
 	
-	private void loadSongs(Bundle bundle) {
-		if (restoreSongs(bundle)) {
-			return;
-		}
+	///////////////////////////////////////////////////////////////// loading
+	
+	private void startLoading() {
+		stopLoading(true);
+		resetLoadingProgress();
 		m_recentSongs.clear();
 		m_songs.clear();
-		m_loading=true;
+		notifyDataSetChanged();
+		
+		m_stopLoading=false;
+		m_loadingPaused=false;
 		m_loadingThread=new Thread() {
 			public void run() {
 				loadBuiltinSongs(Config.getBuiltinSongsPath());
-				if (!Thread.currentThread().isInterrupted()) {
+				if (!checkLoadingStopped()) {
 					loadSongs(Config.getSongsPath());
 				}
-				if (!Thread.currentThread().isInterrupted()) {
+				if (!checkLoadingStopped()) {
+					System.gc();
+//					int delay=UIHelpers.getInteger(
+//						BrowserActivity.this,
+//						R.integer.comprehension_delay);
+//					Simply.wait(m_loadingPauseEvent,delay);
 					reportLoadingFinished();
 				}
 			}
 		};
 		m_loadingThread.start();
+	}
+	
+	private void stopLoading(boolean join) {
+		m_stopLoading=true;
+		resumeLoading();
+		if (join) {
+			Simply.join(m_loadingThread);
+		}
+	}
+	
+	private void pauseLoading() {
+		synchronized (m_loadingPauseEvent) {
+			m_loadingPaused=true;
+		}
+	}
+	
+	private void resumeLoading() {
+		synchronized (m_loadingPauseEvent) {
+			m_loadingPaused=false;
+			Simply.notify(m_loadingPauseEvent);
+		}
+	}
+	
+	private boolean checkLoadingStopped() {
+		synchronized (m_loadingPauseEvent) {
+			if (m_loadingPaused) {
+				Simply.waitNoLock(m_loadingPauseEvent);
+			}
+		}
+		return m_stopLoading;
 	}
 	
 	private void loadBuiltinSongs(File path) {
@@ -193,7 +248,7 @@ public class SongBrowserActivity extends ActivityBase implements ListAdapter, On
 			//
 		}
 		try {
-			if (Thread.currentThread().isInterrupted()) {
+			if (checkLoadingStopped()) {
 				return;
 			}
 			String[] fileNames=getAssets().list(path.getPath());
@@ -218,7 +273,7 @@ public class SongBrowserActivity extends ActivityBase implements ListAdapter, On
 			return;
 		}
 		for (File file: files) {
-			if (Thread.currentThread().isInterrupted()) {
+			if (checkLoadingStopped()) {
 				return;
 			}
 			if (!file.isDirectory()) {
@@ -228,7 +283,6 @@ public class SongBrowserActivity extends ActivityBase implements ListAdapter, On
 				reportSongLoaded(new SongInfo(file));
 			}
 			catch (InvalidSongException e) {
-				e.printStackTrace();
 				//
 			}
 			loadSongs(file);
@@ -252,12 +306,56 @@ public class SongBrowserActivity extends ActivityBase implements ListAdapter, On
 			m_song=song;
 		}
 		public void run() {
+			updateLoadingProgress(m_song);
 			onSongLoaded(m_song);
 		}
 		private SongInfo m_song;
 	}
 	
-	/////////////////////////////////////////////////////// items
+	private void updateLoadingProgress(SongInfo song) {
+		m_songsLoaded++;
+		reportSongsLoaded();
+		if (m_songTraceViews!=null) {
+			String trace=getString(
+				R.string.song_trace_fmt,
+				song.getName(),song.getArtist());
+			for (int i=m_songTraceViews.length-1;i>0;--i) {
+				m_songTraceViews[i].setText(m_songTraceViews[i-1].getText());
+			}
+			m_songTraceViews[0].setText(trace);
+		}
+	}
+
+	private void resetLoadingProgress() {
+		m_songsLoaded=0;
+		reportSongsLoaded();
+		if (m_songTraceViews!=null) {
+			for (TextView view: m_songTraceViews) {
+				view.setText(null);
+			}
+		}
+	}
+	
+	private void reportSongsLoaded() {
+		if (m_songsLoadedView!=null) {
+			m_songsLoadedView.setText(
+				getString(R.string.songs_loaded_fmt,m_songsLoaded)
+			);
+		}
+	}
+	
+	protected void doPageAction(int page,int action) {
+		if (page==PAGE_LOADER && action==PAGEACTION_INITIALIZE) {
+			m_songsLoadedView=(TextView)findViewById(R.id.songs_loaded);
+			m_songTraceViews=new TextView[4];
+			m_songTraceViews[0]=(TextView)findViewById(R.id.song_0);
+			m_songTraceViews[1]=(TextView)findViewById(R.id.song_1);
+			m_songTraceViews[2]=(TextView)findViewById(R.id.song_2);
+			m_songTraceViews[3]=(TextView)findViewById(R.id.song_3);
+		}
+	}
+	
+	///////////////////////////////////////////////////////////////// items
 	
 	public SongInfo getItem(int position) {
 		if (m_recentSongs.size()!=0) {
@@ -293,9 +391,9 @@ public class SongBrowserActivity extends ActivityBase implements ListAdapter, On
 		}
 		if (m_songs.size()!=0) {
 			if (position==0) {
-				return ITEM_EXTERNAL_HEADER;
+				return ITEM_ALL_HEADER;
 			} else if (position<=m_songs.size()) {
-				return ITEM_EXTERNAL;
+				return ITEM_ALL;
 			} else {
 				position-=(1+m_songs.size());
 			}
@@ -359,21 +457,21 @@ public class SongBrowserActivity extends ActivityBase implements ListAdapter, On
 		int itemViewType=getItemViewType(position);
 		if (itemViewType==ITEMVIEW_ITEM) {
 			if (view==null) {
-				view=getLayoutInflater().inflate(R.layout.song_browser_item,null);
+				view=getLayoutInflater().inflate(R.layout.browser_item,null);
 			}
 			SongInfo song=getItem(position);
 			UIHelpers.setText(view,R.id.name,song.getName());
 			UIHelpers.setText(view,R.id.artist,song.getArtist());
 		} else /*if (itemViewType==ITEMVIEW_HEADER)*/ {
 			if (view==null) {
-				view=getLayoutInflater().inflate(R.layout.song_browser_item_header,null);
+				view=getLayoutInflater().inflate(R.layout.browser_item_header,null);
 			}
 			switch (getItemType(position)) {
 				case ITEM_RECENT_HEADER:
-					UIHelpers.setText(view,R.id.name,"Recently played songs");
+					UIHelpers.setText(view,R.id.name,getString(R.string.recent_songs));
 					break;
-				case ITEM_EXTERNAL_HEADER:
-					UIHelpers.setText(view,R.id.name,"All songs");
+				case ITEM_ALL_HEADER:
+					UIHelpers.setText(view,R.id.name,getString(R.string.all_songs));
 					break;
 			}
 		}
@@ -388,7 +486,47 @@ public class SongBrowserActivity extends ActivityBase implements ListAdapter, On
 		}
 	}
 	
+	/////////////////////////////////////////////////////// sorting
+
+	private static void addSorted(ArrayList<SongInfo> songs,SongInfo song) {
+		int i=Collections.binarySearch(songs,song,SONG_COMPARATOR);
+		if (i<0) {
+			i=-i-2;
+		}
+		songs.add(i+1,song);
+	}
+	
+	private static class SongComparator implements Comparator<SongInfo> {
+		public int compare(SongInfo x,SongInfo y) { 
+			return x.getName().compareTo(y.getName());
+		}
+		public boolean equals(SongComparator other) {
+			return true;
+		}
+	}
+	private static final SongComparator SONG_COMPARATOR=new SongComparator();
+	
+	///////////////////////////////////////////////////////////////// data
+
 	private ArrayList<DataSetObserver> m_observers;
+	
+	private ArrayList<SongInfo> m_recentSongs;
+	private ArrayList<SongInfo> m_songs;
+	private long m_songsCookie;
+	
+	private Thread m_loadingThread;
+	private volatile boolean m_stopLoading;
+	private boolean m_loadingPaused;
+	private Object m_loadingPauseEvent=new Object();
+	
+	private int m_songsLoaded;
+	private TextView m_songsLoadedView;
+	private TextView[] m_songTraceViews;
+	
+	/////////////////////////////////// constants
+	
+	private static final int
+		PAGE_LOADER				=1;
 	
 	private static final int
 		ITEMVIEW_HEADER			=0x0000,
@@ -399,23 +537,8 @@ public class SongBrowserActivity extends ActivityBase implements ListAdapter, On
 		ITEM_UNKNOWN			=0xFF00,
 		ITEM_RECENT_HEADER		=0x0000 | ITEMVIEW_HEADER,
 		ITEM_RECENT				=0x0100 | ITEMVIEW_ITEM,
-		ITEM_EXTERNAL_HEADER	=0x0200 | ITEMVIEW_HEADER,
-		ITEM_EXTERNAL			=0x0300 | ITEMVIEW_ITEM;
+		ITEM_ALL_HEADER			=0x0200 | ITEMVIEW_HEADER,
+		ITEM_ALL				=0x0300 | ITEMVIEW_ITEM;
 	
-	/////////////////////////////////////////////////////// ui
-	
-	public boolean onKeyDown(int keyCode,KeyEvent event) {
-		if (keyCode==KeyEvent.KEYCODE_BACK && event.getRepeatCount()==0) {
-			UISoundEffects.playOutSound();
-		}
-		return super.onKeyDown(keyCode,event);
-	}
-	
-	/////////////////////////////////////////////////////// data
-
-	private ArrayList<SongInfo> m_recentSongs;
-	private ArrayList<SongInfo> m_songs;
-	
-	private Thread m_loadingThread;
-	private boolean m_loading=false;
+	private static final String SONGS_FILE="browser.cache";
 }

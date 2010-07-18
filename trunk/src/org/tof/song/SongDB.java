@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-package org.tof.songdb;
+package org.tof.song;
 
 import java.io.DataInput;
 import java.io.DataInputStream;
@@ -27,9 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Date;
 import org.tof.Config;
-import org.tof.song.Song;
 import skiba.util.Simply;
 import android.content.Context;
 import android.util.SparseArray;
@@ -45,10 +43,19 @@ public class SongDB {
 	public static class Score {
 		public int score;
 		public float rating;
-		
+
+		public Score(Score other) {
+			this.score=other.score;
+			this.rating=other.rating;
+		}
 		public Score(int score,float rating) {
 			this.score=score;
 			this.rating=rating;
+		}
+		public boolean isBetter(Score other) {
+			return other==null ||
+				(this.score>other.score) ||
+				(this.score==other.score && this.rating>other.rating);
 		}
 	}
 	
@@ -70,7 +77,9 @@ public class SongDB {
 				RecordImpl record=new RecordImpl(dataIn);
 				records.append(id,record);
 			}
+			m_timestamp=timestamp;
 			m_records=records;
+			m_modified=false;
 		}
 		catch (IOException e) {
 			//e.printStackTrace();
@@ -81,6 +90,9 @@ public class SongDB {
 	}
 	
 	public static void store(Context context) {
+		if (!m_modified) {
+			return;
+		}
 		OutputStream stream=null;
 		try {
 			stream=new FileOutputStream(getFilePath(context));
@@ -93,7 +105,7 @@ public class SongDB {
 			}
 			dataOut.flush();
 			stream.flush();
-			stream.close();
+			m_modified=false;
 		}
 		catch (IOException e) {
 			//e.printStackTrace();
@@ -107,20 +119,28 @@ public class SongDB {
 		return m_records.get(songID);
 	}
 	
-	public static void update(int songID,int skill,int score,float rating) {
-		int skillIndex=Song.skillToIndex(skill);
+	public static Record get(int songID) {
 		RecordImpl record=m_records.get(songID);
 		if (record==null) {
 			record=new RecordImpl();
-			record.timeFirstPlayed=new Date().getTime();
+			record.timeFirstPlayed=System.currentTimeMillis();
 			m_records.put(songID,record);
-			modified();
+			setModified();
 		}
-		record.timeLastPlayed=new Date().getTime();
+		return record;
+	}
+	
+	public static void update(int songID,int skill,Score score) {
+		int skillIndex=Song.skillToIndex(skill);
+		if (skillIndex==-1 || score==null) {
+			return;
+		}
+		RecordImpl record=(RecordImpl)get(songID);
+		record.timeLastPlayed=System.currentTimeMillis();
 		Score oldScore=record.scores[skillIndex];
-		if (oldScore==null || score>oldScore.score) {
-			record.scores[skillIndex]=new Score(score,rating);
-			modified();
+		if (score.isBetter(oldScore)) {
+			record.scores[skillIndex]=new Score(score);
+			setModified();
 		}
 	}
 	
@@ -139,7 +159,16 @@ public class SongDB {
 			return timeLastPlayed;
 		}
 		public Score getScore(int skill) {
-			return scores[Song.skillToIndex(skill)];
+			int skillIndex=Song.skillToIndex(skill);
+			if (skillIndex==-1) {
+				return null;
+			}
+			Score score=scores[skillIndex];
+			if (score==null) {
+				return null;
+			} else {
+				return new Score(score);
+			}
 		}
 		public void store(DataOutput dataOut) throws IOException {
 			dataOut.writeLong(timeFirstPlayed);
@@ -161,8 +190,9 @@ public class SongDB {
 		public Score[] scores=new Score[Song.SKILL_COUNT];
 	}
 	
-	private static void modified() {
-		m_timestamp=new Date().getTime();
+	private static void setModified() {
+		m_timestamp=System.currentTimeMillis();
+		m_modified=true;
 	}
 	
 	/////////////////////////////////// helpers
@@ -190,7 +220,14 @@ public class SongDB {
 	}
 	
 	/////////////////////////////////// data
+	
+	static {
+		m_timestamp=-1;
+		m_records=new SparseArray<RecordImpl>();
+		m_modified=false;
+	}
 
 	private static long m_timestamp;
-	private static SparseArray<RecordImpl> m_records=new SparseArray<RecordImpl>();
+	private static SparseArray<RecordImpl> m_records;
+	private static boolean m_modified;
 }

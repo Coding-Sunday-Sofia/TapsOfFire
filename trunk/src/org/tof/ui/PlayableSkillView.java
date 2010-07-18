@@ -19,7 +19,7 @@ package org.tof.ui;
 
 import org.tof.R;
 import org.tof.song.Song;
-import org.tof.songdb.SongDB;
+import org.tof.song.SongDB;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;

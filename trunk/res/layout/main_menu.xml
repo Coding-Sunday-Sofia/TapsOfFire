@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ViewFlipper
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	style="@style/LayoutFlipper"
-	android:id="@+id/flipper"
+	style="@style/PageFlipper"
+	android:id="@+id/page_flipper"
 	android:background="@drawable/main_menu_background">
     
 	<LinearLayout
@@ -49,12 +49,6 @@
 		    	android:text="Help"/>
 	    	
 	    </LinearLayout>
-
-	    <org.tof.ui.FireButton android:id="@+id/adc"
-			style="@style/FireButton"
-			android:textSize="@dimen/text_even_smaller"
-	    	android:layout_gravity="bottom|right"
-	    	android:text="ADC note"/>
 	    
 	</LinearLayout>
 	
@@ -62,12 +56,6 @@
 		android:id="@+id/page_welcome"
 		android:inflatedId="@+id/page_welcome"
 		android:layout="@layout/main_menu_welcome"
-		android:visibility="invisible"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"/>
-
-	<ViewStub
-		android:layout="@layout/main_menu_adc"
 		android:visibility="invisible"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"/>

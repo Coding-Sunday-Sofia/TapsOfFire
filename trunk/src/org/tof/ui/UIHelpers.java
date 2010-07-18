@@ -133,7 +133,6 @@ public class UIHelpers {
 	}
 		
 	public static void animateHeadAndBody(Activity activity,int layoutID,boolean forceLoadAnimations) {
-		long start=SystemClock.uptimeMillis();
 		ViewGroup layout=(ViewGroup)activity.findViewById(layoutID);
 		int childCount=layout.getChildCount();
 		int animationOffset=0;

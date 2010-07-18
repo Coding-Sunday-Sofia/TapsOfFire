@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ViewFlipper
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/flipper"
-	style="@style/LayoutFlipper"
+	style="@style/PageFlipper"
+	android:id="@+id/page_flipper"
 	android:background="@drawable/help_background">
     
 	<LinearLayout android:id="@+id/layout"

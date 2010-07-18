@@ -106,9 +106,10 @@ class Guitar {
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadMatrixf(m_modelviewMatrix,0);
 		
-		gl.glEnable(GL10.GL_FOG);
+		//gl.glEnable(GL10.GL_DEPTH_TEST);
+		//gl.glEnable(GL10.GL_FOG);
 		gl.glFogfv(GL10.GL_FOG_COLOR,FOG_COLOR,0);
-		gl.glFogf(GL10.GL_FOG_START,BOARD_LENGTH);
+		gl.glFogf(GL10.GL_FOG_START,0);//BOARD_LENGTH);
 		gl.glFogf(GL10.GL_FOG_END,BOARD_LENGTH);
 		gl.glFogx(GL10.GL_FOG_MODE,GL10.GL_LINEAR);
 		
@@ -120,6 +121,7 @@ class Guitar {
 		//m_meter.end();
 		
 		gl.glDisable(GL10.GL_FOG);
+		//gl.glDisable(GL10.GL_DEPTH_TEST);
 	}
 	
 	/////////////////////////////////// strings*
@@ -156,12 +158,10 @@ class Guitar {
 			
 			for (int string=0;string!=Song.STRING_COUNT;++string) {
 				if (Guitar.stringsCheck(m_activeStrings,string)) {
-					//gl.glPushMatrix();
 					gl.glScalef(2f,1,1);
 				}
 				GLHelpers.drawTextureXZ(gl);
 				if (Guitar.stringsCheck(m_activeStrings,string)) {
-					//gl.glPopMatrix();
 					gl.glScalef(1/2f,1,1);
 				}
 				gl.glTranslatef(-STRING_SPACE/STRING_WIDTH,0,0);
@@ -232,7 +232,7 @@ class Guitar {
 	
 //	private AvgElapsedMeter m_meter=new AvgElapsedMeter("______________________-> ",100);
 	
-	private NoteEvent m_fakeNote=new NoteEvent(0,456,1343);
+//	private NoteEvent m_fakeNote=new NoteEvent(0,456,1343);
 	
 	private void renderNotes(GL10 gl) {
 		
@@ -345,8 +345,6 @@ class Guitar {
 			}
 		}
 		
-		//gl.glDepthMask(true);
-		
 		gl.glDisable(GL10.GL_TEXTURE_2D);
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
@@ -398,43 +396,38 @@ class Guitar {
 		
 	}
 	
-	
-	private void renderNoteHead(GL10 gl,NoteEvent note) {
-		int color=Config.getStringColor(note.getString());
-		gl.glPushMatrix();
-		gl.glScalef(NOTE_HEAD_SIZE,NOTE_HEAD_SIZE,NOTE_HEAD_SIZE);
-		GLHelpers.setColor(gl,color,m_readiness);
-		m_noteMesh.render(gl);
-		gl.glPopMatrix();
-	}
-
-	private void renderNoteTail(GL10 gl,float length,NoteEvent note,boolean behindSaddle) {
-		float beatPeriod=60000/m_bpm;
-		float timeToUnits=BOARD_LENGTH_AHEAD/(beatPeriod*BEATS_AHEAD);
-		int color=Config.getStringColor(note.getString());
-		
-		gl.glPushMatrix();
-		gl.glScalef(NOTE_TAIL_WIDTH,1,length);
-		gl.glTranslatef(0,0,0.5f);
-		{
-			float factor=(!behindSaddle || note.isUnpicked())?
-				1.0f:
-				NOTE_SLIP_COLOR_FACTOR;
-			GLHelpers.setColor(gl,color,m_readiness*factor);
-		}
-		gl.glBindTexture(GL10.GL_TEXTURE_2D,m_stringTexture);
-		GLHelpers.drawTextureXZ(gl);
-		gl.glPopMatrix();
-
-		if (behindSaddle && note.isPicked()) {
-			float uniquePosition=m_position+note.getString()*note.getTime();
-			drawWaveform(gl,length,uniquePosition*2*timeToUnits,color);
-		}
-	}
-	
-	private static final float NOTE_SLIP_COLOR_FACTOR=0.3f;
-	private static final float NOTE_HEAD_SIZE=0.25f;
-	private static final float NOTE_TAIL_WIDTH=0.15f;
+//	private void renderNoteHead(GL10 gl,NoteEvent note) {
+//		int color=Config.getStringColor(note.getString());
+//		gl.glPushMatrix();
+//		gl.glScalef(NOTE_HEAD_SIZE,NOTE_HEAD_SIZE,NOTE_HEAD_SIZE);
+//		GLHelpers.setColor(gl,color,m_readiness);
+//		m_noteMesh.render(gl);
+//		gl.glPopMatrix();
+//	}
+//
+//	private void renderNoteTail(GL10 gl,float length,NoteEvent note,boolean behindSaddle) {
+//		float beatPeriod=60000/m_bpm;
+//		float timeToUnits=BOARD_LENGTH_AHEAD/(beatPeriod*BEATS_AHEAD);
+//		int color=Config.getStringColor(note.getString());
+//		
+//		gl.glPushMatrix();
+//		gl.glScalef(NOTE_TAIL_WIDTH,1,length);
+//		gl.glTranslatef(0,0,0.5f);
+//		{
+//			float factor=(!behindSaddle || note.isUnpicked())?
+//				1.0f:
+//				NOTE_SLIP_COLOR_FACTOR;
+//			GLHelpers.setColor(gl,color,m_readiness*factor);
+//		}
+//		gl.glBindTexture(GL10.GL_TEXTURE_2D,m_stringTexture);
+//		GLHelpers.drawTextureXZ(gl);
+//		gl.glPopMatrix();
+//
+//		if (behindSaddle && note.isPicked()) {
+//			float uniquePosition=m_position+note.getString()*note.getTime();
+//			drawWaveform(gl,length,uniquePosition*2*timeToUnits,color);
+//		}
+//	}
 	
 	/////////////////////////////////// waveform
 	
@@ -515,25 +508,6 @@ class Guitar {
 		gl.glBlendFunc(GL10.GL_SRC_ALPHA,GL10.GL_ONE_MINUS_SRC_ALPHA);
 	}
 	
-	private int m_waveformTexture;
-	private GLBufferObject m_waveformVertices;
-	private GLBufferObject m_waveformTexcoords;
-	
-	private static final float
-		WAVEFORM_LENGTH			=20f,
-		WAVEFORM_LENGTH_FACTOR	=WAVEFORM_LENGTH*0.9f,
-		WAVEFORM_WIDTH_SCALE_1	=2.0f,
-		WAVEFORM_WIDTH_SCALE_2	=0.3f,
-		WAVEFORM_POSITION_SPEEDUP=2;
-	
-	private static final int 
-		WAVEFORM_POINTS			=8;
-	private static final float 
-		WAVEFORM_HEAD_WIDTH		=1,
-		WAVEFORM_HEAD_HEIGHT	=0.1f,
-		WAVEFORM_TAIL_WIDTH		=NOTE_TAIL_WIDTH,
-		WAVEFORM_TAIL_HEIGHT	=0.7f;
-	
 	/////////////////////////////////// data
 	
 	private Song m_song;
@@ -554,19 +528,19 @@ class Guitar {
 	private int m_barTexture;
 	
 	private Mesh m_noteMesh;
+
+	private int m_waveformTexture;
+	private GLBufferObject m_waveformVertices;
+	private GLBufferObject m_waveformTexcoords;
 	
 	/////////////////////////////////// constants
 	
 	private static final int FOV_Y=60;
 	
-	private static final float BOARD_WIDTH=4.0f;
-	private static final float BOARD_LENGTH=14.0f;
-	
 	private static final int BEATS_AHEAD=5;
 	
 	private static final float SADDLE_OFFSET=0f;
-	private static final float SADDLE_WIDTH=0.1f;
-
+	private static final float BOARD_LENGTH=14.0f;
 	private static final float BOARD_LENGTH_AHEAD=BOARD_LENGTH-SADDLE_OFFSET;
 	
 	private static final float STRING_WIDTH=0.05f;
@@ -575,4 +549,25 @@ class Guitar {
 	private static final float BAR_WIDTH=0.05f;
 
 	private static final float[] FOG_COLOR=new float[]{0.1f,0.1f,0.1f,1};
+	
+	private static final float 
+		NOTE_SLIP_COLOR_FACTOR	=0.3f,
+		NOTE_HEAD_SIZE			=0.25f,
+		NOTE_TAIL_WIDTH			=0.15f;
+
+	private static final float
+		WAVEFORM_LENGTH			=20f,
+		WAVEFORM_LENGTH_FACTOR	=WAVEFORM_LENGTH*0.9f,
+		WAVEFORM_WIDTH_SCALE_1	=2.0f,
+		WAVEFORM_WIDTH_SCALE_2	=0.3f,
+		WAVEFORM_POSITION_SPEEDUP=2;
+	
+	private static final int 
+		WAVEFORM_POINTS			=8;
+	private static final float 
+		WAVEFORM_HEAD_WIDTH		=1,
+		WAVEFORM_HEAD_HEIGHT	=0.1f,
+		WAVEFORM_TAIL_WIDTH		=NOTE_TAIL_WIDTH,
+		WAVEFORM_TAIL_HEIGHT	=0.7f;
+	
 }

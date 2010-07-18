@@ -19,17 +19,15 @@ package org.tof;
 
 import java.io.File;
 import java.io.IOException;
-import org.tof.R;
 import org.tof.player.Vorbis2RawConverter;
-import org.tof.song.InvalidSongException;
 import org.tof.song.Song;
+import org.tof.song.SongCache;
+import org.tof.song.SongDB;
+import org.tof.song.SongInfo;
 import org.tof.song.SongIni;
-import org.tof.songdb.SongCache;
-import org.tof.songdb.SongDB;
 import org.tof.stage.SongPlayer;
 import org.tof.ui.ActivityBase;
 import org.tof.ui.PlayableSkillView;
-import org.tof.ui.SongInfo;
 import org.tof.ui.UIHelpers;
 import org.tof.ui.UISoundEffects;
 import org.tof.util.AssetExtractor;
@@ -42,31 +40,29 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Process;
-import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ViewFlipper;
 
 public class SelectSkillActivity extends ActivityBase implements PlayableSkillView.Callback {
 	
 	protected void onCreate(Bundle savedState) {
 		super.onCreate(savedState);
 		setContentView(R.layout.select_skill);
+		usePageFlipper(savedState);
 		
 		Intent intent=getIntent();
 		loadSong(intent.getByteArrayExtra(SongInfo.BUNDLE_KEY));
+	
 //		try {
 //			m_song=new SongInfo(
-//					//getAssets(),new File("songs/defy"));
-//					new File("/sdcard/API-no-song"));
+//					getAssets(),new File("songs/api"));
+//					//new File("/sdcard/API-no-song"));
 //			MiscHelpers.cleanup(Config.getSongCachePath());
 //		}
-//		catch (InvalidSongException e) {
+//		catch (org.tof.song.InvalidSongException e) {
 //			throw new RuntimeException(e);
 //		}
 		
-		m_pageFlipper=(ViewFlipper)findViewById(R.id.flipper);
 		initializeSkillViews();
 		
 		UIHelpers.setText(this,R.id.name,m_song.getName());
@@ -83,37 +79,6 @@ public class SelectSkillActivity extends ActivityBase implements PlayableSkillVi
 			animate();
 		}
 	}
-	
-	protected void onPause() {
-		super.onPause();
-		doPageAction(getCurrentPage(),PAGEACTION_PAUSE);
-	}
-	
-	protected void onDestroy() {
-		super.onDestroy();
-		doPageAction(getCurrentPage(),PAGEACTION_STOP);
-	}
-	
-	protected boolean onBackKeyDown() {
-		UISoundEffects.playOutSound();
-		if (getCurrentPage()==PAGE_MAIN) {
-			return false;
-		}
-		switchToPage(PAGE_MAIN,true);
-		return true;
-	}
-	
-//	public boolean onPrepareOptionsMenu(Menu menu) {
-//		m_paused=!m_paused;
-//		if (m_paused) {
-//			doPageAction(getCurrentPage(),PAGEACTION_PAUSE);
-//		} else {
-//			doPageAction(getCurrentPage(),PAGEACTION_RESUME);
-//		}
-//			
-//		return super.onPrepareOptionsMenu(menu);
-//	}
-//	boolean m_paused;
 	
 	/////////////////////////////////////////////////////// logic
 	
@@ -135,19 +100,19 @@ public class SelectSkillActivity extends ActivityBase implements PlayableSkillVi
 	private void prepareSong() {
 		if (m_song.isAsset()) {
 			if (!checkSDCard()) {
-				switchToPage(PAGE_SDCARD,true);
+				flipToPage(PAGE_SDCARD,true);
 				return;
 			}
 			if (checkExtracted()) {
 				playSong();
 			} else {
-				switchToPage(PAGE_EXTRACTOR,true);
+				flipToPage(PAGE_EXTRACTOR,true);
 			}
 		} else {
 			if (checkConverted()) {
 				playSong();
 			} else {
-				switchToPage(PAGE_CONVERTER,true);
+				flipToPage(PAGE_CONVERTER,true);
 			}
 		}
 	}
@@ -160,7 +125,7 @@ public class SelectSkillActivity extends ActivityBase implements PlayableSkillVi
 			Intent intent=new Intent(this,GameActivity.class);
 			intent.putExtra(SongInfo.BUNDLE_KEY,dataOut.toByteArray());
 			startActivity(intent);
-			switchToPage(PAGE_MAIN,false);
+			flipToPage(PAGE_MAIN,false);
 		}
 		catch (IOException e) {
 			throw new RuntimeException(e);
@@ -186,7 +151,7 @@ public class SelectSkillActivity extends ActivityBase implements PlayableSkillVi
 			findViewById(R.id.check_sdcard).setOnClickListener(
 				new View.OnClickListener() {
 					public void onClick(View view) {
-						switchToPage(PAGE_MAIN,true);
+						flipToPage(PAGE_MAIN,true);
 						prepareSong();
 					}
 				}
@@ -236,8 +201,7 @@ public class SelectSkillActivity extends ActivityBase implements PlayableSkillVi
 			{
 				if (m_extractor!=null) {
 					m_extractor.stop();
-					m_extractor=null;
-					m_handler.removeCallbacks(m_extractorPoller);
+					freeExtractor();
 				}
 				m_handler.removeCallbacks(m_extractorStarter);
 				break;
@@ -256,7 +220,7 @@ public class SelectSkillActivity extends ActivityBase implements PlayableSkillVi
 			case PAGEACTION_RESUME:
 			{
 				if (m_extractor!=null) {
-					m_extractor.pause();
+					m_extractor.resume();
 				}
 				break;
 			}
@@ -274,7 +238,7 @@ public class SelectSkillActivity extends ActivityBase implements PlayableSkillVi
 		m_extractor.check();
 		if (m_extractor.isFinished()) {
 			Exception finishError=m_extractor.getFinishError();
-			m_extractor=null;
+			freeExtractor();
 			if (finishError!=null) {
 				ErrorReportActivity.report(
 					this,
@@ -291,6 +255,11 @@ public class SelectSkillActivity extends ActivityBase implements PlayableSkillVi
 		}
 		showExtractorProgress(m_extractor.getProgress());
 		m_handler.postDelayed(m_extractorPoller,100);
+	}
+	
+	private void freeExtractor() {
+		m_extractor=null;
+		m_handler.removeCallbacks(m_extractorPoller);
 	}
 	
 	private void showExtractorProgress(int progress) {
@@ -508,8 +477,7 @@ public class SelectSkillActivity extends ActivityBase implements PlayableSkillVi
 			{
 				if (m_converter!=null) {
 					m_converter.stop();
-					m_converter=null;
-					m_handler.removeCallbacks(m_converterPoller);
+					freeConverter();
 				}
 				m_handler.removeCallbacks(m_converterStarter);
 				break;
@@ -546,7 +514,7 @@ public class SelectSkillActivity extends ActivityBase implements PlayableSkillVi
 		m_converter.check();
 		if (m_converter.isFinished()) {
 			Exception finishError=m_converter.getFinishError();
-			m_converter=null;
+			freeConverter();
 			if (finishError!=null) {
 				ErrorReportActivity.report(
 					this,
@@ -563,6 +531,11 @@ public class SelectSkillActivity extends ActivityBase implements PlayableSkillVi
 		}
 		showConverterProgress(m_converter.getProgress());
 		m_handler.postDelayed(m_converterPoller,100);
+	}
+	
+	private void freeConverter() {
+		m_converter=null;
+		m_handler.removeCallbacks(m_converterPoller);
 	}
 	
 	private void showConverterProgress(int progress) {
@@ -784,36 +757,10 @@ public class SelectSkillActivity extends ActivityBase implements PlayableSkillVi
 			offset);
 	}
 	
-	private static final int[] SKILLPAGE_IDS=new int[]{
-		R.id.amazing,R.id.amazingDivider,
-		R.id.medium,R.id.mediumDivider,
-		R.id.easy,R.id.easyDivider,
-		R.id.supaeasy,R.id.supaeasyDivider,
-	};
-	
 	/////////////////////////////////////////////////////// pages
 	
-	private int getCurrentPage() {
-		return m_pageFlipper.getDisplayedChild();
-	}
-	
-	private void switchToPage(int page,boolean animate) {
-		if (page==getCurrentPage()) {
-			return;
-		}
-		View viewView=m_pageFlipper.getChildAt(page);
-		if (viewView.getVisibility()!=View.VISIBLE) {
-			viewView.setVisibility(View.VISIBLE);
-			doPageAction(page,PAGEACTION_INITIALIZE);
-		}
-		doPageAction(getCurrentPage(),PAGEACTION_STOP);
-		UIHelpers.flipToChild(m_pageFlipper,page,animate);
-		doPageAction(page,PAGEACTION_START);
-		
-	}
-	
-	private void doPageAction(int view,int action) {
-		switch (view) {
+	protected void doPageAction(int page,int action) {
+		switch (page) {
 			case PAGE_SDCARD:
 				onSDCardPageAction(action);
 				break;
@@ -831,7 +778,6 @@ public class SelectSkillActivity extends ActivityBase implements PlayableSkillVi
 	private SongInfo m_song;
 	private SongInfo m_originalSong;
 	
-	private ViewFlipper m_pageFlipper;
 	private Handler m_handler=new Handler();
 	
 	private Extractor m_extractor;
@@ -864,20 +810,19 @@ public class SelectSkillActivity extends ActivityBase implements PlayableSkillVi
 	
 	/////////////////////////////////// constants
 	
+	private static final int[] SKILLPAGE_IDS=new int[]{
+		R.id.amazing,R.id.amazingDivider,
+		R.id.medium,R.id.mediumDivider,
+		R.id.easy,R.id.easyDivider,
+		R.id.supaeasy,R.id.supaeasyDivider,
+	};
+	
 	private static final int 
-		CONVERTER_PRIORITY		=Process.THREAD_PRIORITY_DISPLAY,
+		CONVERTER_PRIORITY		=Process.THREAD_PRIORITY_DEFAULT,
 		CONVERTER_DELAY			=700;
 	
 	private static final int 
-		PAGE_MAIN				=0,
 		PAGE_SDCARD				=1,
 		PAGE_EXTRACTOR			=2,
 		PAGE_CONVERTER			=3;
-	
-	private static final int
-		PAGEACTION_INITIALIZE	=0,
-		PAGEACTION_START		=1,
-		PAGEACTION_STOP			=2,
-		PAGEACTION_PAUSE		=3,
-		PAGEACTION_RESUME		=4;
 }
